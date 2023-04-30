@@ -39,6 +39,7 @@ jobs:
 
       #### - ランナーでjobを実行する場合の設定
       MONGODB_CONNECTION_PROTOCOL: mongodb
+      # serviceコンテナ側で設定した、ホストとコンテナのアクセスの設定に応じて、適切なアドレスを設定する。
       MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
