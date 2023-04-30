@@ -13,6 +13,8 @@ jobs:
     environment: testing
     runs-on: ubuntu-latest
     # Dockerイメージを使ってjobを動かすための設定。
+    ## container: XXX で定義したものは、あくまでjobをこのコンテナ内で実行するといったもの。
+    ## ※下に記述した、services: XXX　は、このjob上でコンテナを実行するといったこと。
     container:
       image: node:16
       # containerのセットアップとして必要なenvはここに書く。
@@ -20,11 +22,29 @@ jobs:
         hello: world
     # あくまで、steps側で使いたいenvは今まで通りこっち側で書く。
     env:
-      MONGODB_CONNECTION_PROTOCOL: mongodb+srv
-      MONGODB_CLUSTER_ADDRESS: cluster0.n4hxgy4.mongodb.net
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      # MONGODB_CONNECTION_PROTOCOL: mongodb+srv
+      # MONGODB_CLUSTER_ADDRESS: cluster0.n4hxgy4.mongodb.net
+      # MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      # MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      
+      MONGODB_CONNECTION_PROTOCOL: mongodb
+      # jobをコンテナ上で実行している場合、アドレスを指定する代わりにserviceコンテナの名前(ラベル)を指定して接続することができる。
+      MONGODB_CLUSTER_ADDRESS: mongodb
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: example
       PORT: 8080
+    # サービスコンテナの設定。
+    ## このjob内で扱えるコンテナを定義することができる。
+    ## このjobが、ランナーで動いていても、コンテナで動いていてもサービスコンテナを使うことができる。
+    services:
+      mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+        # このjobが、ランナーで動いている場合は、ネットワークのマッピングが必要。※ このjobがコンテナ上で実行されている場合は、ネットワークの設定が不要。
+        ## ports:
+        ##   - 6379:6379
     # 指定したcontainer内で実行されるが、今まで通りgithub actions上の文法を扱うことができる。
     steps:
       - name: Get Code
