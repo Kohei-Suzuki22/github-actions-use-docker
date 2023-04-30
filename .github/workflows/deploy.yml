@@ -5,7 +5,7 @@ on:
       - master
       - main
       - dev
-      - se-service-container-in-runner
+      - use-service-container-in-runner
 env:
   CACHE_KEY: node-deps
   MONGODB_DB_NAME: gha-demo
